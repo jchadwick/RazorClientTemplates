@@ -1,0 +1,17 @@
+﻿<div class="movie">
+    
+    <h2>@Model.Title</h2>
+    
+    <div class="details">
+        <p class="release-date">Release Date: @Model.ReleaseDate</p>
+        <p class="running-time">Running Time: @Model.RunningTime</p>
+    </div>
+    
+    <h3>Actors</h3>
+    <ul class="actors">
+    @foreach(var actor in Model.Actors) {
+        <li>@actor.Name</li>
+    }
+    </ul>
+
+</div>

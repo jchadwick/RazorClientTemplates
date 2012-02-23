@@ -1,0 +1,114 @@
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Web.Mvc.Razor;
+using System.Web.Razor;
+using System.Web.Razor.Parser.SyntaxTree;
+
+namespace Core
+{
+    public class RazorClientTemplateEngine
+    {
+        public string RenderClientTemplate(string razorTemplate)
+        {
+            using(var writer = new StringWriter())
+            using(var reader = new StringReader(razorTemplate))
+            {
+                RenderClientTemplate(reader, writer);
+                return writer.GetStringBuilder().ToString();
+            }
+        }
+
+        public virtual void RenderClientTemplate(TextReader razorTemplate, TextWriter output)
+        {
+            var host = new RazorEngineHost(new CSharpRazorCodeLanguage());
+            var engine = new RazorTemplateEngine(host);
+
+            var parserResults = engine.ParseTemplate(razorTemplate);
+
+            if(parserResults.Success == false)
+                // TODO: Less suck
+                throw new RazorClientTemplateException("Template parse exception");
+
+            output.Write("function (Model) { ");
+            output.Write("var _buf = []; ");
+            ParseSyntaxTreeNode(parserResults.Document, output);
+            output.Write(" return _buf.join(''); };");
+        }
+
+        private void ParseSyntaxTreeNode(SyntaxTreeNode node, TextWriter output)
+        {
+            if (node is TransitionSpan) return;
+            if (VisitBlock(node as Block, output)) return;
+            if (VisitMarkupSpan(node as MarkupSpan, output)) return;
+            if (VisitCodeSpan(node as CodeSpan, output)) return;
+
+            Trace.WriteLine(string.Format("{0} not handled", node));
+        }
+
+        private bool VisitBlock(Block block, TextWriter output)
+        {
+            if(block == null) return false;
+
+            foreach (var child in block.Children)
+            {
+                ParseSyntaxTreeNode(child, output);
+            }
+
+            return true;
+        }
+
+        private bool VisitMarkupSpan(MarkupSpan markup, TextWriter output)
+        {
+            if(markup == null) return false;
+
+            var content = new StringBuilder(markup.Content);
+            content.Replace("\"", "\\\"");
+            content.Replace("'", "\\'");
+            content.Replace("\r", "\\r");
+            content.Replace("\n", "\\n");
+
+            output.Write("_buf.push('");
+            output.Write(content.ToString());
+            output.Write("');");
+
+            return true;
+        }
+
+        private bool VisitCodeSpan(CodeSpan code, TextWriter output)
+        {
+            if (code == null) return false;
+            if (code is ModelSpan) return false;
+            if (code is InheritsSpan) return false;
+
+            if (code is ImplicitExpressionSpan)
+            {
+                output.Write("_buf.push(");
+                output.Write(code.Content);
+                output.Write(");");
+            }
+            else
+            {
+                var content = TranslateCodeBlock(code.Content);
+                output.Write(content);
+            }
+
+            return true;
+        }
+
+        private string TranslateCodeBlock(string code)
+        {
+            var @foreach = Regex.Match(code, @"foreach *\( *var (?<Variable>[^ ]*) in (?<Enumerator>[^ )]*)\) *{");
+
+            if (@foreach.Success == false)
+                return code;
+
+            var groups = @foreach.Groups;
+
+            return string.Format("for(var __i=0; __i<{0}.length; __i++) {{ var {1} = {0}[__i]; ",
+                                 groups["Enumerator"].Value, groups["Variable"].Value);
+        }
+    }
+}

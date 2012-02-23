@@ -1,0 +1,38 @@
+﻿@using RazorClientTemplates
+@model IEnumerable<Website.Models.Movie>
+@{
+    ViewBag.Title = "My Movies";
+}
+
+<h2>@ViewBag.Title</h2>
+<section id="movies">
+    
+    @foreach(var movie in Model)
+    {
+        @Html.ClientTemplate("Movie", movie)
+    }
+
+</section>
+
+<div>
+    <button id="load-more">Load More...</button>
+</div>
+
+<script type="text/javascript">
+
+    $(function() {
+        $('#load-more').click(function() {
+            $.ajax({
+                url: '@Url.Action("MoreMovies", "Home")',
+                success: function (movies) {
+                    var moviesContainer = $('#movies');
+                    $.each(movies, function (idx, movie) {
+                        var renderedTemplate = Movie_ClientTemplate(movie);
+                        moviesContainer.append(renderedTemplate);
+                    });
+                }
+            });
+        });
+    });
+
+</script>
