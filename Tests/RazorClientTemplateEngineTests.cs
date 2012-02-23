@@ -20,8 +20,7 @@ namespace Tests
         [TestMethod]
         public void ShouldRenderClientTemplate()
         {
-            var engine = new RazorClientTemplateEngine();
-            Debug.Write(engine.RenderClientTemplate(_templateSource));
+            Debug.Write(new RazorClientTemplateEngine().RenderClientTemplate(_templateSource));
         }
     }
 }

@@ -1,4 +1,9 @@
-﻿<div class="movie">
+﻿@* Helpers not supported... yet! *@
+@helper ListItem(string content) {
+    <li>@content</li>
+}
+
+<div class="movie">
     
     <h2>@Model.Title</h2>
     
@@ -9,7 +14,8 @@
     
     <h3>Actors</h3>
     <ul class="actors">
-    @foreach(var actor in Model.Actors) {
+    @foreach(var actor in Model.Actors) 
+    {
         <li>@actor.Name</li>
     }
     </ul>

@@ -9,7 +9,7 @@
     
     @foreach(var movie in Model)
     {
-        @Html.ClientTemplate("Movie", movie)
+        @Html.Partial("Movie", movie)
     }
 
 </section>
@@ -18,7 +18,10 @@
     <button id="load-more">Load More...</button>
 </div>
 
+
 <script type="text/javascript">
+
+    var movieClientTemplate = @Html.ClientTemplate("Movie");
 
     $(function() {
         $('#load-more').click(function() {
@@ -27,7 +30,7 @@
                 success: function (movies) {
                     var moviesContainer = $('#movies');
                     $.each(movies, function (idx, movie) {
-                        var renderedTemplate = Movie_ClientTemplate(movie);
+                        var renderedTemplate = movieClientTemplate(movie);
                         moviesContainer.append(renderedTemplate);
                     });
                 }

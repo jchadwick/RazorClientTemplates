@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -38,17 +37,29 @@ namespace Core
             output.Write(" return _buf.join(''); };");
         }
 
-        private void ParseSyntaxTreeNode(SyntaxTreeNode node, TextWriter output)
+        protected virtual void ParseSyntaxTreeNode(SyntaxTreeNode node, TextWriter output)
         {
+            if (node == null) return;
+
+            // Ignore the @ symbol - that's Razor's business
             if (node is TransitionSpan) return;
+
+            // Explicitly ignore @model and @inherits spans as part
+            // of the transition from static to dynamic typing
+            if (node is ModelSpan) return;
+            if (node is InheritsSpan) return;
+            if (node is MetaCodeSpan) return;
+
+            // Explicitly support these types of spans:
             if (VisitBlock(node as Block, output)) return;
             if (VisitMarkupSpan(node as MarkupSpan, output)) return;
             if (VisitCodeSpan(node as CodeSpan, output)) return;
 
-            Trace.WriteLine(string.Format("{0} not handled", node));
+            // Emit a warning for any span that wasn't handled above
+            Trace.WriteLine(string.Format("Ignoring {0}...", node));
         }
 
-        private bool VisitBlock(Block block, TextWriter output)
+        protected virtual bool VisitBlock(Block block, TextWriter output)
         {
             if(block == null) return false;
 
@@ -60,7 +71,7 @@ namespace Core
             return true;
         }
 
-        private bool VisitMarkupSpan(MarkupSpan markup, TextWriter output)
+        protected virtual bool VisitMarkupSpan(MarkupSpan markup, TextWriter output)
         {
             if(markup == null) return false;
 
@@ -77,11 +88,20 @@ namespace Core
             return true;
         }
 
-        private bool VisitCodeSpan(CodeSpan code, TextWriter output)
+        protected virtual bool VisitCodeSpan(CodeSpan code, TextWriter output)
         {
             if (code == null) return false;
-            if (code is ModelSpan) return false;
-            if (code is InheritsSpan) return false;
+
+            if (code is HelperHeaderSpan)
+            {
+                // TODO: Helper support
+                Trace.WriteLine(string.Format("Ignoring {0} - Helpers not currently supported", code));
+                return true;
+            }
+            if (code is HelperFooterSpan)
+            {
+                return true;
+            }
 
             if (code is ImplicitExpressionSpan)
             {
@@ -91,14 +111,18 @@ namespace Core
             }
             else
             {
-                var content = TranslateCodeBlock(code.Content);
-                output.Write(content);
+                var codeContent = new StringBuilder(code.Content);
+                codeContent.Replace("\r", string.Empty);
+                codeContent.Replace("\n", string.Empty);
+
+                var translatedCode = TranslateCodeBlock(codeContent.ToString());
+                output.Write(translatedCode);
             }
 
             return true;
         }
 
-        private string TranslateCodeBlock(string code)
+        protected virtual string TranslateCodeBlock(string code)
         {
             var @foreach = Regex.Match(code, @"foreach *\( *var (?<Variable>[^ ]*) in (?<Enumerator>[^ )]*)\) *{");
 

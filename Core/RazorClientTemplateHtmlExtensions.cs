@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Mvc.Html;
 using Core;
 
 namespace RazorClientTemplates
@@ -12,24 +10,12 @@ namespace RazorClientTemplates
     {
         private static readonly RazorClientTemplateEngine TemplateEngine = new RazorClientTemplateEngine();
 
-        public static IHtmlString ClientTemplate(this HtmlHelper html, string templateName, object model = null)
+        public static IHtmlString ClientTemplate(this HtmlHelper html, string templateName)
         {
-            var partialOutput = html.Partial(templateName, model);
-
-            if(html.HasClientTemplateBeenRendered(templateName))
-            {
-                return partialOutput;
-            }
-
             var buffer = new StringWriter();
-            buffer.WriteLine("<script type='text/javascript'>");
-            buffer.WriteLine(templateName + "_ClientTemplate = ");
 
             using (var reader = html.GetPartialViewStream(templateName))
                 TemplateEngine.RenderClientTemplate(reader, buffer);
-            
-            buffer.WriteLine("</script>");
-            buffer.WriteLine(partialOutput.ToString());
 
             return MvcHtmlString.Create(buffer.GetStringBuilder().ToString());
         }
@@ -59,25 +45,6 @@ namespace RazorClientTemplates
             {
                 throw new RazorClientTemplateException(e);
             }
-        }
-
-        private static bool HasClientTemplateBeenRendered(this HtmlHelper html, string templateName)
-        {
-            var requestCache = html.ViewContext.HttpContext.Items;
-
-            var renderedTemplates = requestCache["RazorClientTemplates"] as IList<string>;
-
-            if(renderedTemplates == null)
-            {
-                requestCache["RazorClientTemplates"] = renderedTemplates = new List<string>();
-            }
-
-            if (renderedTemplates.Contains(templateName))
-                return true;
-
-            renderedTemplates.Add(templateName);
-
-            return false;
         }
     }
 }
