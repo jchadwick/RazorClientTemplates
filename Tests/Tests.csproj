@@ -49,6 +49,9 @@
   <ItemGroup>
     <Compile Include="RazorClientTemplateEngineTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\Solution.cs">
+      <Link>Properties\Solution.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Templates\Movie.cshtml">
