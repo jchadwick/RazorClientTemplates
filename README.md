@@ -4,7 +4,6 @@ The Razor Client Templates library allows you to reuse your Partial Razor Views 
 In addition to ensuring consistency between the HTML generated on the client with what's generated server-side, it also means that you don't have to maintain two different sets of markup - just write once and run anywhere!
 
 
-----------
 
 ## Installation ##
 
@@ -15,7 +14,6 @@ PM&gt;  Install-Package RazorClientTemplates
 </code>
 
 
-----------
 
 ## Usage ##
 
@@ -112,7 +110,6 @@ However you get it to the browser, you've now got a JavaScript function that you
 	$('#movies').append(renderedMovie);
 
 
-----------
 
 ## Supported Scenarios / Known Limitations
 
