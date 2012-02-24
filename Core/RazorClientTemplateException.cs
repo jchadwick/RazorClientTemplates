@@ -1,6 +1,6 @@
 using System;
 
-namespace Core
+namespace RazorClientTemplates
 {
     public class RazorClientTemplateException : Exception
     {

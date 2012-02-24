@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Website.Models
+namespace RazorClientTemplates.Website.Models
 {
     public class Movie
     {

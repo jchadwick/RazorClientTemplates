@@ -6,10 +6,18 @@ using System.Web.Mvc.Razor;
 using System.Web.Razor;
 using System.Web.Razor.Parser.SyntaxTree;
 
-namespace Core
+namespace RazorClientTemplates
 {
     public class RazorClientTemplateEngine
     {
+        public static RazorClientTemplateEngine Current
+        {
+            get { return _current; }
+            set { _current = value; }
+        }
+        private static RazorClientTemplateEngine _current = new RazorClientTemplateEngine();
+
+
         public string RenderClientTemplate(string razorTemplate)
         {
             using(var writer = new StringWriter())
@@ -31,9 +39,14 @@ namespace Core
                 // TODO: Less suck
                 throw new RazorClientTemplateException("Template parse exception");
 
+            RenderClientTemplate(parserResults.Document, output);
+        }
+
+        public virtual void RenderClientTemplate(Block document, TextWriter output)
+        {
             output.Write("function (Model) { ");
             output.Write("var _buf = []; ");
-            ParseSyntaxTreeNode(parserResults.Document, output);
+            ParseSyntaxTreeNode(document, output);
             output.Write(" return _buf.join(''); };");
         }
 

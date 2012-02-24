@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests
+namespace RazorClientTemplates
 {
     [TestClass]
     public class RazorClientTemplateEngineTests

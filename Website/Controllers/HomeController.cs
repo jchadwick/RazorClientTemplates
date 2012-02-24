@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
-using Website.Models;
+using RazorClientTemplates.Website.Models;
 
-namespace Website.Controllers
+namespace RazorClientTemplates.Website.Controllers
 {
     public class HomeController : Controller
     {
