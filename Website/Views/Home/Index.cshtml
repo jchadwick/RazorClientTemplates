@@ -4,23 +4,37 @@
     ViewBag.Title = "My Movies";
 }
 
-<h2>@ViewBag.Title</h2>
-<section id="movies">
+<style>
+    #twitter-container { float: right; width: 400px; }
+    #twitter-feed { height: 700px; overflow-y: auto; }
+    #twitter-feed .tweet { clear: both; min-height: 60px; margin-bottom: 5px; }
+    #twitter-feed .tweet .username { font-weight: bold; }
+    #twitter-feed .tweet img { float: left; padding-right: 5px; }
+</style>
+
+<section id="movies" style="float: left; width: 60%; min-height: 500px; height: 100%;">
+    <h2>@ViewBag.Title</h2>
     
     @foreach(var movie in Model)
     {
         @Html.Partial("Movie", movie)
     }
 
+    <div>
+        <button id="load-more">Load More Movies...</button>
+    </div>
+
 </section>
 
-<div>
-    <button id="load-more">Load More...</button>
-</div>
+<section id="twitter-container">
+    <h2>Tweets about "movies"</h2>
+    <div id="twitter-feed"></div>
+</section>
 
+<div style="clear: both;"></div>
 
+<!-- Inline Client Template -->
 <script type="text/javascript">
-
     var movieClientTemplate = @Html.ClientTemplate("Movie");
 
     $(function() {
@@ -37,5 +51,33 @@
             });
         });
     });
+</script>
 
+<!-- Script Resource Client Template -->
+<script src="@Url.Content("~/ClientTemplate.axd?name=TweetTemplate&template=~/Views/Shared/Tweet.cshtml")" type="text/javascript"></script>
+<script type="text/javascript">
+    var query = {
+        q: "movies",
+        rpp: 10,
+        since_id: 0
+    };
+    
+    function loadTweets() {
+        var feed = $('#twitter-feed');
+
+        $.ajax('http://search.twitter.com/search.json', { data: query, dataType: "jsonp" })
+            .success(function(resp) {
+                query.since_id = resp.max_id;
+
+                $.each(resp.results, function(i, tweet) {
+                    var rendered = TweetTemplate(tweet);
+                    $(rendered).hide().prependTo(feed).show('fast');
+                });
+
+                setTimeout(loadTweets, 10000);
+            });
+    }
+
+
+    $(loadTweets);
 </script>
