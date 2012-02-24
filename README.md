@@ -28,7 +28,7 @@ Just follow a few simple steps:
 First, you'll need a Razor template that you're using as a partial view.
 In fact, you've probably already completed this step.
 
-For example, take the following view:
+For example, take the following server-side Razor view:
 
 	<div id="movies">
 		@foreach(var movie in Model) {
@@ -93,7 +93,7 @@ Or, you can use the custom script handler to generate an external script include
 	<script type="text/javascript" src="/ClientTemplate.axd?template=~/Views/Shared/Movie.cshtml&name=movieTemplate"></script>
 
 
-### Step 3: Use the client template function!
+### Step 3: Use the client template in the browser!
 
 
 However you get it to the browser, you've now got a JavaScript function that you can call to render markup on the client! Just call the function and pass it a model and it will spit out rendered HTML that you can use however you like:
@@ -123,7 +123,7 @@ That being said, here is what is known to be working, not working, and things we
 
 ### What works:
 
-- C# code -- it just translates to JavaScript so easily!
+- Basic C# code constructs (`if/then`, `foreach`, etc.)
 - Basic model property accessors work fine, but of course you are not going to have access to .NET methods and properties on the client (nor will you have JavaScript nuances on the server)
 - Basic `foreach` loops work, as long as you stick to the basic model property accessors (e.g. `foreach(var movie in Model.Movies)`)
 - Basic `if/else` checks work against simple boolean properties
