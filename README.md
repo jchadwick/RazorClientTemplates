@@ -80,7 +80,7 @@ You can use the `Html.ClientTemplate` helper method to render the script inline,
 
 **External JavaScript Include**
 
-Or, you can use the custom script handler to generate an external script include to keep that JavaScript out of your HTML:
+Or, you can use the custom script handler to generate the same code as above, but as an external script include to keep that JavaScript out of your HTML:
 	
 	<script type="text/javascript" src="/ClientTemplate.axd?template=~/Views/Shared/Movie.cshtml&name=movieTemplate"></script>
 
