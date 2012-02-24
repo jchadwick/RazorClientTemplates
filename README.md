@@ -9,10 +9,7 @@ In addition to ensuring consistency between the HTML generated on the client wit
 
 Install via NuGet!
 
-<code style="background-color: #202020;border: 4px solid silver;border-radius: 5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;box-shadow: 2px 2px 3px #6e6e6e;color: #E2E2E2;display: block;font: 1.5em 'andale mono', 'lucida console', monospace;line-height: 1.5em;overflow: auto;padding: 15px;">
-PM&gt;  Install-Package RazorClientTemplates
-</code>
-
+`PM>  Install-Package RazorClientTemplates`
 
 
 ## Usage ##
@@ -48,9 +45,6 @@ For example, take the following server-side Razor view:
 	    }
 	    </ul>
 	</div>
-
-This is all fine and good when you want to render everything on the server, but what happens when you make AJAX calls to retrieve movie data on the client?
-Just use **Razor Client Templates** to transform *Movie.cshtml* to a JavaScript function that you can call on the client!
 
 ### Step 2: Convert Razor markup to a Client Template
 
