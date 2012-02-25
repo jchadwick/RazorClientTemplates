@@ -57,6 +57,7 @@
     <Compile Include="RazorClientTemplateExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="nuget\Web.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

@@ -6,5 +6,6 @@ obj
 TestResults
 _UpgradeReport_Files
 UpgradeLog.XML
-Core/**.nupkg
-deployToNuGet.bat
+*.nupkg
+*NuGet.bat
+
