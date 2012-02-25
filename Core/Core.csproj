@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -42,6 +43,8 @@
       <Private>True</Private>
       <HintPath>..\packages\AspNetRazor.Core.1.0.20105.407\lib\net40\System.Web.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="RazorClientTemplateEngine.cs" />
@@ -51,7 +54,7 @@
     </Compile>
     <Compile Include="RazorClientTemplateException.cs" />
     <Compile Include="RazorClientTemplateHandler.cs" />
-    <Compile Include="RazorClientTemplateHtmlExtensions.cs" />
+    <Compile Include="RazorClientTemplateExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

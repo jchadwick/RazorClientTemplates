@@ -54,7 +54,7 @@
 </script>
 
 <!-- Script Resource Client Template -->
-<script src="@Url.Content("~/ClientTemplate.axd?name=TweetTemplate&template=~/Views/Shared/Tweet.cshtml")" type="text/javascript"></script>
+<script src="@Url.ClientTemplate("Tweet", functionName: "TweetTemplate")" type="text/javascript"></script>
 <script type="text/javascript">
     var query = {
         q: "movies",

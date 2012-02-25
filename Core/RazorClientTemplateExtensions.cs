@@ -5,25 +5,32 @@ using System.Web.Mvc;
 
 namespace RazorClientTemplates
 {
-    public static class RazorClientTemplateHtmlExtensions
+    public static class RazorClientTemplateExtensions
     {
         private static readonly RazorClientTemplateEngine TemplateEngine = new RazorClientTemplateEngine();
+
+
+        public static IHtmlString ClientTemplate(this UrlHelper url, string templateName, string controllerName = null, string functionName = null)
+        {
+            return new HtmlString(RazorClientTemplateHandler.GenerateUrl(templateName, controllerName, functionName));
+        }
+
 
         public static IHtmlString ClientTemplate(this HtmlHelper html, string templateName)
         {
             var buffer = new StringWriter();
 
-            using (var reader = html.GetPartialViewStream(templateName))
+            using (var reader = GetPartialViewStream(html.ViewContext, templateName))
                 TemplateEngine.RenderClientTemplate(reader, buffer);
 
-            return MvcHtmlString.Create(buffer.GetStringBuilder().ToString());
+            return new HtmlString(buffer.GetStringBuilder().ToString());
         }
 
-        private static TextReader GetPartialViewStream(this HtmlHelper html, string templateName)
+        private static TextReader GetPartialViewStream(ControllerContext controllerContext, string templateName)
         {
             try
             {
-                var view = ViewEngines.Engines.FindPartialView(html.ViewContext.Controller.ControllerContext, templateName);
+                var view = ViewEngines.Engines.FindPartialView(controllerContext, templateName);
                 
                 if(view == null || view.View == null)
                     throw new RazorClientTemplateException(string.Format("Partial View {0} not found", templateName));
@@ -36,7 +43,7 @@ namespace RazorClientTemplates
                         string.Format("View Type {0} is not supported", view.View.GetType()));
                 }
 
-                var location = html.ViewContext.HttpContext.Server.MapPath(razorView.ViewPath);
+                var location = controllerContext.HttpContext.Server.MapPath(razorView.ViewPath);
                 
                 return new StreamReader(location);
             }

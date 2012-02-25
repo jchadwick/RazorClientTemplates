@@ -82,7 +82,7 @@ You can use the `Html.ClientTemplate` helper method to render the script inline,
 
 Or, you can use the custom script handler to generate the same code as above, but as an external script include to keep that JavaScript out of your HTML:
 	
-	<script type="text/javascript" src="/ClientTemplate.axd?template=~/Views/Shared/Movie.cshtml&name=movieTemplate"></script>
+	<script type="text/javascript" src="@Url.ClientTemplate("Movie", functionName: "movieTemplate")"></script>
 
 
 ### Step 3: Use the client template in the browser!
