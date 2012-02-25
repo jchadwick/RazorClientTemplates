@@ -21,7 +21,7 @@ namespace RazorClientTemplates
 
 
         public RazorClientTemplateHandler()
-            : this(RazorClientTemplateEngine.Current)
+            : this(new RazorClientTemplateEngine())
         {
         }
 

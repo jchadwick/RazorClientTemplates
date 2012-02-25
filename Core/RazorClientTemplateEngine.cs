@@ -10,14 +10,6 @@ namespace RazorClientTemplates
 {
     public class RazorClientTemplateEngine
     {
-        public static RazorClientTemplateEngine Current
-        {
-            get { return _current; }
-            set { _current = value; }
-        }
-        private static RazorClientTemplateEngine _current = new RazorClientTemplateEngine();
-
-
         public string RenderClientTemplate(string razorTemplate)
         {
             using(var writer = new StringWriter())
@@ -137,7 +129,7 @@ namespace RazorClientTemplates
 
         protected virtual string TranslateCodeBlock(string code)
         {
-            var @foreach = Regex.Match(code, @"foreach *\( *var (?<Variable>[^ ]*) in (?<Enumerator>[^ )]*)\) *{");
+            var @foreach = Regex.Match(code, @"foreach *\( *(?<Type>[^ ]*) (?<Variable>[^ ]*) in (?<Enumerator>[^ )]*)\) *{");
 
             if (@foreach.Success == false)
                 return code;
