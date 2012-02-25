@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>RazorClientTemplates</id>
+	<version>$version$</version>
+    <title>Razor Client Templates</title>
+    <authors>Jess Chadwick</authors>
+    <owners>Jess Chadwick</owners>
+    <projectUrl>https://github.com/jchadwick/RazorClientTemplates</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>
+    The Razor Client Templates library allows you to reuse your Partial Razor Views as client side (JavaScript) templates.
+    </description>
+    <copyright>Copyright 2012</copyright>
+    <tags>mvc razor clienttemplates templates ajax jquery</tags>
+  </metadata>
+</package>
